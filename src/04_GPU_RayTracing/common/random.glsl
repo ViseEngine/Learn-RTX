@@ -1,6 +1,6 @@
-uvec2 seed;
+uint seed;
 //产生随机数
-uvec2 tea(uint val0, uint val1)
+uint tea(uint val0, uint val1)
 {
     uint v0 = val0;
     uint v1 = val1;
@@ -13,7 +13,7 @@ uvec2 tea(uint val0, uint val1)
         v1 += ((v0 << 4) + 0xad90777d) ^ (v0 + s0) ^ ((v0 >> 5) + 0x7e95761e);
     }
 
-    return uvec2(v0, v1);
+    return v0;
 }
 
 uint lcg(uint prev)
@@ -33,16 +33,16 @@ uint whash(uint seed)
     seed = seed ^ (seed >> uint(15));
     return seed;
 }
+
 float rnd(uint prev)
 {
-    seed.x = whash(seed.y);
-    seed.y = whash(seed.x);
+    //seed = whash(seed);
     return (float(lcg(prev)) / float(0x01000000));
 }
 
 float random(float min, float max)
 {
-    return (max - min) * (rnd(seed.x) - 0.5);
+    return (max - min) * (rnd(seed) - 0.5);
 }
 
 float rand(uint n)
@@ -52,7 +52,7 @@ float rand(uint n)
 
 vec3 randomVec3()
 {
-    return vec3(rnd(seed.x), rnd(seed.y), rnd(seed.x * seed.y));
+    return vec3(rnd(seed), rnd(seed), rnd(seed));
 }
 
 vec3 randomVec3(float min, float max)
